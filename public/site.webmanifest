@@ -1,0 +1,9 @@
+{
+  "name": "DriveElite – Premium Car Rentals",
+  "short_name": "DriveElite",
+  "description": "Premium car rentals in Tirana, Albania",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#C9A84C"
+}

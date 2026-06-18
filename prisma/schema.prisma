@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Car {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  model       String?
+  brandName   String
+  price       Int
+  imageUrl    String?
+  createdAt   DateTime   @default(now())
+  images      CarImage[]
+  bookings    Booking[]
+}
+
+model CarImage {
+  id       Int    @id @default(autoincrement())
+  carId    Int
+  imageUrl String
+  car      Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@index([carId])
+}
+
+model Booking {
+  id             Int       @id @default(autoincrement())
+  carId          Int
+  fullName       String
+  email          String
+  phoneNumber    String
+  pickupLocation String?
+  pickupDate     DateTime?
+  dropoffDate    DateTime?
+  totalPrice     Int?
+  notes          String?
+  status         String    @default("Pending")
+  createdAt      DateTime  @default(now())
+  car            Car       @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@index([carId])
+  @@index([createdAt])
+  @@index([status])
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  createdAt DateTime @default(now())
+}
