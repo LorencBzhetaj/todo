@@ -32,7 +32,7 @@ export function isSuspicious(str: string): boolean {
     /DELETE\s+FROM/i,
     /UNION\s+SELECT/i,
     /--\s/,
-    /\/\*.*\*\//s,
+    /\/\*[\s\S]*?\*\//,
     /data:\s*text\/html/i,
     /vbscript:/i,
     /expression\s*\(/i,
