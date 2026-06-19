@@ -32,40 +32,9 @@ export default function AboutClient() {
             Whether you&apos;re a tourist exploring Albania, a business traveler, or someone who simply wants to drive in style — our team ensures your experience is nothing short of excellent.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          {[
-            { n: '500+', l: 'Happy Clients' },
-            { n: '10+',  l: 'Years Experience' },
-            { n: '50+',  l: 'Premium Cars' },
-            { n: '5★',   l: 'Average Rating' },
-          ].map((s) => (
-            <div key={s.l} className="glass rounded-2xl p-7 hover:border-gold/40 transition-all">
-              <p className="text-4xl font-black gold-text mb-2">{s.n}</p>
-              <p className="text-muted text-sm">{s.l}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="bg-dark-2 border-y border-white/5 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="divider mb-4"/>
-          <p className="text-gold text-xs font-semibold uppercase tracking-widest mb-3">Our Values</p>
-          <h2 className="text-4xl font-black text-off-white mb-12">What Sets Us Apart</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { t: 'Transparency', d: 'No hidden fees. No surprises. What you see is what you pay.', icon: '◈' },
-              { t: 'Quality', d: 'Every vehicle is inspected, cleaned and ready before your rental.', icon: '◇' },
-              { t: 'Excellence', d: 'From booking to return, we deliver a first-class experience.', icon: '◉' },
-            ].map((v) => (
-              <div key={v.t} className="glass rounded-2xl p-8 hover:border-gold/40 transition-all group hover:-translate-y-1 duration-300">
-                <div className="text-2xl text-gold mb-5">{v.icon}</div>
-                <h3 className="text-off-white font-bold text-xl mb-3">{v.t}</h3>
-                <p className="text-muted text-sm leading-relaxed">{v.d}</p>
-              </div>
-            ))}
-          </div>
+        <div className="rounded-2xl overflow-hidden border border-white/5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/about.jpg" alt="About TodoRental" className="w-full h-full object-cover"/>
         </div>
       </section>
 
