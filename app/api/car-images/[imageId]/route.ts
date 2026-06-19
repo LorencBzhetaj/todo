@@ -20,6 +20,19 @@ export async function GET(req: NextRequest) {
   }
 }
 
+export async function DELETE(_req: NextRequest, { params }: { params: { imageId: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  const id = Number(params.imageId);
+  if (!id) return NextResponse.json({ success: false, message: 'Invalid id' }, { status: 400 });
+  try {
+    await db.carImage.delete({ where: { id } });
+    return NextResponse.json({ success: true, message: 'Image deleted.' });
+  } catch {
+    return NextResponse.json({ success: false, message: 'Failed to delete image' }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
