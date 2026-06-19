@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getCarImages } from '@/lib/api-client';
-import Lightbox from '@/components/ui/Lightbox';
 import type { CarImage } from '@/types';
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '355697536334';
@@ -26,7 +25,6 @@ export default function CarDetailClient({ carId }: { carId: string }) {
   const [images, setImages] = useState<CarImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState<string | null>(null);
-  const [lightbox, setLightbox] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,13 +64,11 @@ export default function CarDetailClient({ carId }: { carId: string }) {
     { label: 'Brand', value: car.brandName },
     { label: 'Model', value: car.model || '—' },
     { label: 'Price / Day', value: `€${Number(car.price).toLocaleString()}` },
-    { label: 'Status', value: car.isAvailable ? 'Available' : 'Booked' },
+    { label: 'Category', value: 'Premium' },
   ];
 
   return (
     <>
-      {lightbox && <Lightbox imageUrl={lightbox} carName={car.name} onClose={() => setLightbox(null)}/>}
-
       {/* Header */}
       <div className="bg-dark-2 border-b border-white/5 pt-24 pb-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-8">
@@ -88,18 +84,9 @@ export default function CarDetailClient({ carId }: { carId: string }) {
               <h1 className="text-4xl md:text-5xl font-black text-off-white">{car.name}</h1>
               <p className="text-muted mt-2">{car.brandName} · {car.model}</p>
             </div>
-            {/* Availability badge */}
-            {car.isAvailable ? (
-              <span className="flex-shrink-0 flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-bold px-4 py-2 rounded-full">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"/>
-                Available
-              </span>
-            ) : (
-              <span className="flex-shrink-0 flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold px-4 py-2 rounded-full">
-                <span className="w-2 h-2 rounded-full bg-red-400"/>
-                Currently Booked
-              </span>
-            )}
+            <span className="flex-shrink-0 flex items-center gap-2 bg-gold/10 border border-gold/20 text-gold text-sm font-bold px-4 py-2 rounded-full">
+              €{Number(car.price).toLocaleString()}/day
+            </span>
           </div>
         </div>
       </div>
@@ -110,17 +97,11 @@ export default function CarDetailClient({ carId }: { carId: string }) {
 
             {/* Images */}
             <div>
-              <div className="relative rounded-2xl overflow-hidden cursor-zoom-in group border border-white/5 hover:border-gold/30 transition-colors mb-3"
-                onClick={() => activeImg && setLightbox(activeImg)} role="button" tabIndex={0}
-                onKeyDown={e => e.key === 'Enter' && activeImg && setLightbox(activeImg)} aria-label="Enlarge image">
+              <div className="relative rounded-2xl overflow-hidden border border-white/5 mb-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={activeImg ?? car.imageUrl ?? ''} alt={car.name}
-                  className="w-full h-72 sm:h-80 object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-72 sm:h-80 object-cover"
                   loading="eager"/>
-                <div className="absolute bottom-4 right-4 bg-dark/80 backdrop-blur-sm border border-gold/20 text-gold text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                  Enlarge
-                </div>
               </div>
               {allImages.length > 1 && (
                 <div className="flex gap-2 flex-wrap">
@@ -135,20 +116,6 @@ export default function CarDetailClient({ carId }: { carId: string }) {
                 </div>
               )}
 
-              {/* Booked dates info */}
-              {!car.isAvailable && car.activeBookings && car.activeBookings.length > 0 && (
-                <div className="mt-4 bg-red-500/5 border border-red-500/20 rounded-xl p-4">
-                  <p className="text-red-400 text-xs font-bold uppercase tracking-wider mb-2">Currently Booked</p>
-                  {car.activeBookings.map((b, i) => (
-                    <p key={i} className="text-muted text-sm">
-                      {b.pickupDate ? new Date(b.pickupDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
-                      {' → '}
-                      {b.dropoffDate ? new Date(b.dropoffDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
-                    </p>
-                  ))}
-                  <p className="text-muted text-xs mt-2">Contact us to check other available dates.</p>
-                </div>
-              )}
             </div>
 
             {/* Info */}
@@ -170,9 +137,7 @@ export default function CarDetailClient({ carId }: { carId: string }) {
                   {specs.map(s => (
                     <div key={s.label} className="bg-dark-4 border border-white/5 rounded-xl p-3">
                       <p className="text-xs text-muted mb-1 uppercase tracking-wider">{s.label}</p>
-                      <p className={`text-off-white font-semibold text-sm ${s.label === 'Status' ? (car.isAvailable ? 'text-green-400' : 'text-red-400') : ''}`}>
-                        {s.value}
-                      </p>
+                      <p className="text-off-white font-semibold text-sm">{s.value}</p>
                     </div>
                   ))}
                 </div>
@@ -187,13 +152,10 @@ export default function CarDetailClient({ carId }: { carId: string }) {
 
               <div className="flex gap-3 mb-3">
                 <button onClick={() => router.push(`/inquiry/${car.id}`)}
-                  disabled={!car.isAvailable}
-                  className={`flex-1 py-4 rounded-xl font-bold transition-all ${
-                    car.isAvailable ? 'btn-gold shine' : 'bg-dark-4 border border-white/10 text-muted cursor-not-allowed'
-                  }`}>
-                  {car.isAvailable ? 'Book This Car' : 'Currently Unavailable'}
+                  className="flex-1 py-4 rounded-xl font-bold transition-all btn-gold shine">
+                  Book This Car
                 </button>
-                <a href="tel:+355697536334"
+                <a href={`tel:+${WHATSAPP}`}
                   className="flex items-center gap-2 px-5 py-4 border border-white/10 hover:border-gold/40 rounded-xl text-sm font-medium text-off-white transition-all hover:bg-white/5">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 11.3 19.79 19.79 0 0 1 .07 2.7 2 2 0 0 1 2.06.5h3a2 2 0 0 1 2 1.72 19.79 19.79 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L6.09 8.37a16 16 0 0 0 6.29 6.29l1.24-1.22a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>

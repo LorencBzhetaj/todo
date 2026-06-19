@@ -11,12 +11,9 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-5 group">
-              <div className="w-9 h-9 border border-gold/60 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                  <path d="M19 17H5a2 2 0 0 1-2-2V9l2-4h14l2 4v6a2 2 0 0 1-2 2z"/>
-                  <circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>
-                </svg>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="TodoRental" width={36} height={36}
+                className="rounded-full object-cover border border-gold/40 group-hover:border-gold transition-colors"/>
               <span className="font-black text-xl text-off-white">Todo<span className="gold-text">Rental</span></span>
             </Link>
             <p className="text-muted text-sm leading-relaxed mb-6">
