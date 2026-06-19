@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { DayPicker, DateRange } from 'react-day-picker';
+import { format, isWithinInterval, startOfDay } from 'date-fns';
+import 'react-day-picker/dist/style.css';
 import { getCar, createBooking } from '@/lib/api-client';
 import { sanitizeInput, sanitizeEmail, isSuspicious } from '@/lib/sanitize';
 import type { Car } from '@/types';
@@ -12,14 +15,20 @@ export default function InquiryClient({ carId }: { carId: string }) {
   const searchParams = useSearchParams();
 
   const [car, setCar] = useState<Car | null>(null);
-  const [bookedRanges, setBookedRanges] = useState<{ pickupDate: string; dropoffDate: string }[]>([]);
+  const [bookedRanges, setBookedRanges] = useState<{ from: Date; to: Date }[]>([]);
+  const [range, setRange] = useState<DateRange | undefined>(() => {
+    const p = searchParams.get('pickup');
+    const d = searchParams.get('dropoff');
+    if (p && d) return { from: new Date(p), to: new Date(d) };
+    return undefined;
+  });
+  const [showCal, setShowCal] = useState(false);
+
   const [form, setForm] = useState({
     fullName: '',
     email: '',
     phoneNumber: '',
     pickupLocation: searchParams.get('location') ?? '',
-    pickupDate: searchParams.get('pickup') ?? '',
-    dropoffDate: searchParams.get('dropoff') ?? '',
     notes: '',
   });
   const [error, setError] = useState('');
@@ -32,26 +41,26 @@ export default function InquiryClient({ carId }: { carId: string }) {
       .then((r) => r.json())
       .then((d) => {
         if (d.success) setBookedRanges(
-          d.bookings.map((b: { pickupDate: string; dropoffDate: string }) => ({
-            pickupDate: b.pickupDate.slice(0, 10),
-            dropoffDate: b.dropoffDate.slice(0, 10),
-          }))
+          d.bookings
+            .filter((b: { pickupDate: string; dropoffDate: string }) => b.pickupDate && b.dropoffDate)
+            .map((b: { pickupDate: string; dropoffDate: string }) => ({
+              from: startOfDay(new Date(b.pickupDate)),
+              to: startOfDay(new Date(b.dropoffDate)),
+            }))
         );
       })
       .catch(() => {});
   }, [carId]);
 
-  const isDateConflict = (pickup: string, dropoff: string) =>
-    bookedRanges.some(
-      (r) => pickup < r.dropoffDate && dropoff > r.pickupDate
-    );
+  const pickupDate  = range?.from ? format(range.from, 'yyyy-MM-dd') : '';
+  const dropoffDate = range?.to   ? format(range.to,   'yyyy-MM-dd') : '';
 
   const rentalDays = useMemo(() => {
-    if (!form.pickupDate || !form.dropoffDate) return null;
-    const diff = new Date(form.dropoffDate).getTime() - new Date(form.pickupDate).getTime();
+    if (!range?.from || !range?.to) return null;
+    const diff = range.to.getTime() - range.from.getTime();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
     return days > 0 ? days : null;
-  }, [form.pickupDate, form.dropoffDate]);
+  }, [range]);
 
   const totalPrice = useMemo(() => {
     if (!car || !rentalDays) return null;
@@ -61,27 +70,45 @@ export default function InquiryClient({ carId }: { carId: string }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
+  const isDateBooked = (date: Date) =>
+    bookedRanges.some((r) =>
+      isWithinInterval(startOfDay(date), { start: r.from, end: r.to })
+    );
+
+  const handleRangeSelect = (newRange: DateRange | undefined) => {
+    if (!newRange) { setRange(undefined); return; }
+    // If the selected from date is booked, reject it
+    if (newRange.from && isDateBooked(newRange.from)) return;
+    // If to date passes through a booked range, reject
+    if (newRange.from && newRange.to) {
+      const days = Math.ceil((newRange.to.getTime() - newRange.from.getTime()) / 86400000);
+      for (let i = 0; i <= days; i++) {
+        const d = new Date(newRange.from);
+        d.setDate(d.getDate() + i);
+        if (isDateBooked(d)) { setRange({ from: newRange.from }); return; }
+      }
+      setShowCal(false);
+    }
+    setRange(newRange);
+  };
+
   const handleSubmit = async () => {
     setError('');
-
     if (!form.fullName.trim()) { setError('Full name is required.'); return; }
     if (!form.email.trim()) { setError('Email is required.'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError('Please enter a valid email.'); return; }
     if (!form.phoneNumber.trim()) { setError('Phone number is required.'); return; }
     if (!form.pickupLocation.trim()) { setError('Pick-up location is required.'); return; }
-    if (!form.pickupDate) { setError('Pick-up date is required.'); return; }
-    if (!form.dropoffDate) { setError('Drop-off date is required.'); return; }
+    if (!pickupDate) { setError('Pick-up date is required.'); return; }
+    if (!dropoffDate) { setError('Drop-off date is required.'); return; }
     if (rentalDays === null || rentalDays <= 0) { setError('Drop-off date must be after pick-up date.'); return; }
-    if (isDateConflict(form.pickupDate, form.dropoffDate)) { setError('This car is already booked for those dates. Please choose different dates.'); return; }
 
-    // Sanitize
     const cleanName     = sanitizeInput(form.fullName, 300);
     const cleanPhone    = sanitizeInput(form.phoneNumber, 50);
     const cleanLocation = sanitizeInput(form.pickupLocation, 300);
     const cleanNotes    = sanitizeInput(form.notes, 2000);
     const cleanEmail    = sanitizeEmail(form.email) || form.email.trim().toLowerCase();
 
-    // Block suspicious input
     if ([cleanName, cleanPhone, cleanLocation, cleanNotes].some(isSuspicious)) {
       setError('Invalid characters detected. Please check your input.');
       return;
@@ -95,8 +122,8 @@ export default function InquiryClient({ carId }: { carId: string }) {
         email: cleanEmail,
         phoneNumber: cleanPhone,
         pickupLocation: cleanLocation,
-        pickupDate: form.pickupDate,
-        dropoffDate: form.dropoffDate,
+        pickupDate,
+        dropoffDate,
         totalPrice: totalPrice ?? undefined,
         notes: cleanNotes || undefined,
       });
@@ -140,6 +167,19 @@ export default function InquiryClient({ carId }: { carId: string }) {
 
   return (
     <div className="min-h-screen bg-dark">
+      {/* DayPicker dark theme overrides */}
+      <style>{`
+        .rdp { --rdp-accent-color: #C9A84C; --rdp-background-color: rgba(201,168,76,0.15); color: #E8E0D0; }
+        .rdp-day_disabled { opacity: 0.25 !important; text-decoration: line-through; cursor: not-allowed !important; background: rgba(239,68,68,0.15) !important; color: #f87171 !important; border-radius: 6px; }
+        .rdp-day_selected, .rdp-day_range_start, .rdp-day_range_end { background-color: #C9A84C !important; color: #0a0a0a !important; font-weight: 800; }
+        .rdp-day_range_middle { background-color: rgba(201,168,76,0.2) !important; color: #E8E0D0 !important; }
+        .rdp-button:hover:not([disabled]) { background-color: rgba(201,168,76,0.15) !important; }
+        .rdp-head_cell { color: #8a8070; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .rdp-caption_label { color: #E8E0D0; font-weight: 800; }
+        .rdp-nav_button { color: #C9A84C !important; }
+        .rdp-table { width: 100%; }
+      `}</style>
+
       <div className="bg-dark-2 border-b border-white/5 pt-24 pb-8">
         <div className="max-w-2xl mx-auto px-4 sm:px-8">
           <button onClick={() => router.push('/cars')}
@@ -219,36 +259,57 @@ export default function InquiryClient({ carId }: { carId: string }) {
                 className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label htmlFor="pickupDate" className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Pick-up Date *</label>
-                <input id="pickupDate" name="pickupDate" type="date"
-                  min={new Date().toISOString().split('T')[0]}
-                  value={form.pickupDate} onChange={handleChange} required
-                  className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
-              </div>
-              <div>
-                <label htmlFor="dropoffDate" className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Drop-off Date *</label>
-                <input id="dropoffDate" name="dropoffDate" type="date"
-                  min={form.pickupDate || new Date().toISOString().split('T')[0]}
-                  value={form.dropoffDate} onChange={handleChange} required
-                  className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
-              </div>
-            </div>
+            {/* Date Range Picker */}
+            <div className="mb-4">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">
+                Pick-up & Drop-off Dates *
+              </label>
+              <button type="button" onClick={() => setShowCal(!showCal)}
+                className="w-full input-dark px-4 py-3 rounded-xl text-sm text-left flex items-center justify-between">
+                <span className={range?.from ? 'text-off-white' : 'text-white/25'}>
+                  {range?.from
+                    ? range.to
+                      ? `${format(range.from, 'dd MMM yyyy')} → ${format(range.to, 'dd MMM yyyy')}`
+                      : `${format(range.from, 'dd MMM yyyy')} → select drop-off`
+                    : 'Select dates...'}
+                </span>
+                <svg className="w-4 h-4 text-muted flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </button>
 
-            {bookedRanges.length > 0 && (
-              <div className="bg-red-500/8 border border-red-500/20 rounded-xl p-3 mb-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-red-400 mb-2">Already Booked</p>
-                <ul className="space-y-1">
-                  {bookedRanges.map((r, i) => (
-                    <li key={i} className="text-xs text-red-300/80 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0"/>
-                      {r.pickupDate} → {r.dropoffDate}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              {showCal && (
+                <div className="mt-2 bg-dark-3 border border-white/10 rounded-2xl p-4 shadow-2xl">
+                  {bookedRanges.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-1.5">
+                      <span className="text-xs text-muted">Booked:</span>
+                      {bookedRanges.map((r, i) => (
+                        <span key={i} className="text-xs bg-red-500/15 border border-red-500/20 text-red-400 px-2 py-0.5 rounded-full">
+                          {format(r.from, 'dd MMM')} – {format(r.to, 'dd MMM')}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <DayPicker
+                    mode="range"
+                    selected={range}
+                    onSelect={handleRangeSelect}
+                    disabled={[
+                      { before: new Date() },
+                      ...bookedRanges,
+                    ]}
+                    numberOfMonths={1}
+                    showOutsideDays={false}
+                  />
+                  {range?.from && range?.to && (
+                    <button type="button" onClick={() => { setRange(undefined); }}
+                      className="mt-2 w-full text-xs text-muted hover:text-red-400 transition-colors py-1">
+                      Clear dates
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
 
             {rentalDays && car && (
               <div className="bg-gold/5 border border-gold/20 rounded-xl p-4 mb-4">
@@ -257,11 +318,6 @@ export default function InquiryClient({ carId }: { carId: string }) {
                   <span className="text-gold font-black text-xl">€{(car.price * rentalDays).toLocaleString()}</span>
                 </div>
                 <p className="text-muted text-xs">Estimated total — final price confirmed by our team</p>
-              </div>
-            )}
-            {form.pickupDate && form.dropoffDate && !rentalDays && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
-                <p className="text-red-400 text-xs">Drop-off date must be after pick-up date</p>
               </div>
             )}
           </div>
