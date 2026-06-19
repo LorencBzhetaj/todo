@@ -12,6 +12,7 @@ export default function InquiryClient({ carId }: { carId: string }) {
   const searchParams = useSearchParams();
 
   const [car, setCar] = useState<Car | null>(null);
+  const [bookedRanges, setBookedRanges] = useState<{ pickupDate: string; dropoffDate: string }[]>([]);
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -27,7 +28,23 @@ export default function InquiryClient({ carId }: { carId: string }) {
 
   useEffect(() => {
     getCar(carId).then((d) => setCar(d.car)).catch(() => setError('Failed to load car.'));
+    fetch(`/api/cars/${carId}/booked-dates`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) setBookedRanges(
+          d.bookings.map((b: { pickupDate: string; dropoffDate: string }) => ({
+            pickupDate: b.pickupDate.slice(0, 10),
+            dropoffDate: b.dropoffDate.slice(0, 10),
+          }))
+        );
+      })
+      .catch(() => {});
   }, [carId]);
+
+  const isDateConflict = (pickup: string, dropoff: string) =>
+    bookedRanges.some(
+      (r) => pickup < r.dropoffDate && dropoff > r.pickupDate
+    );
 
   const rentalDays = useMemo(() => {
     if (!form.pickupDate || !form.dropoffDate) return null;
@@ -55,6 +72,7 @@ export default function InquiryClient({ carId }: { carId: string }) {
     if (!form.pickupDate) { setError('Pick-up date is required.'); return; }
     if (!form.dropoffDate) { setError('Drop-off date is required.'); return; }
     if (rentalDays === null || rentalDays <= 0) { setError('Drop-off date must be after pick-up date.'); return; }
+    if (isDateConflict(form.pickupDate, form.dropoffDate)) { setError('This car is already booked for those dates. Please choose different dates.'); return; }
 
     // Sanitize
     const cleanName     = sanitizeInput(form.fullName, 300);
@@ -217,6 +235,20 @@ export default function InquiryClient({ carId }: { carId: string }) {
                   className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
               </div>
             </div>
+
+            {bookedRanges.length > 0 && (
+              <div className="bg-red-500/8 border border-red-500/20 rounded-xl p-3 mb-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-red-400 mb-2">Already Booked</p>
+                <ul className="space-y-1">
+                  {bookedRanges.map((r, i) => (
+                    <li key={i} className="text-xs text-red-300/80 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0"/>
+                      {r.pickupDate} → {r.dropoffDate}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {rentalDays && car && (
               <div className="bg-gold/5 border border-gold/20 rounded-xl p-4 mb-4">

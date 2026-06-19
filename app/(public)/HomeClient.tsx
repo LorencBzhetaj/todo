@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLang } from '@/lib/useLang';
 
@@ -19,6 +19,15 @@ export default function HomeClient() {
     v.muted = true;
     v.play().catch(() => {});
   }, []);
+
+  const [popularCars, setPopularCars] = useState<{ id: number; name: string; brandName: string; price: number; imageUrl?: string | null; model?: string | null }[]>([]);
+  const fetchPopular = useCallback(() => {
+    fetch('/api/cars?limit=4')
+      .then((r) => r.json())
+      .then((d) => { if (d.cars) setPopularCars(d.cars.slice(0, 4)); })
+      .catch(() => {});
+  }, []);
+  useEffect(() => { fetchPopular(); }, [fetchPopular]);
 
   const today = new Date().toISOString().split('T')[0];
   const WA = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '355697536334';
@@ -41,24 +50,10 @@ export default function HomeClient() {
     { icon: '◎', title: t('feat4_t'), desc: t('feat4_d') },
   ];
 
-  const services = [
-    { title: t('svc1_t'), desc: t('svc1_d'), icon: '🗓' },
-    { title: t('svc2_t'), desc: t('svc2_d'), icon: '✈️' },
-    { title: t('svc3_t'), desc: t('svc3_d'), icon: '🎩' },
-    { title: t('svc4_t'), desc: t('svc4_d'), icon: '📋' },
-  ];
-
   const testimonials = [
     { name: 'Marco Rossi', role: 'Business Traveler', text: 'Exceptional service. The BMW X5 was immaculate and the pickup was effortless. Will use again.', stars: 5 },
     { name: 'Sarah Mitchell', role: 'Tourist', text: 'Best car rental experience in Albania. Professional, fast, and the car was stunning.', stars: 5 },
     { name: 'Arben Hoxha', role: isSq ? 'Klient Korporativ' : 'Corporate Client', text: isSq ? 'TodoRental menaxhoi flotën tonë gjatë konferencës. Ekzekutim i përsosur.' : 'TodoRental handled our entire corporate fleet for the conference. Flawless execution.', stars: 5 },
-  ];
-
-  const stats = [
-    { number: '500+', label: t('stat1') },
-    { number: '50+',  label: t('stat2') },
-    { number: '10+',  label: t('stat3') },
-    { number: '24/7', label: t('stat4') },
   ];
 
   return (
@@ -172,17 +167,6 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y border-white/5 bg-dark-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 sm:py-12 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <p className="text-3xl md:text-4xl font-black gold-text mb-1">{s.number}</p>
-              <p className="text-muted text-sm uppercase tracking-wider">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Features */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
@@ -204,23 +188,73 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* Services */}
+      {/* Popular Cars */}
       <section className="bg-dark-2 border-y border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
-          <div className="mb-10 sm:mb-14">
-            <div className="divider mb-4"/>
-            <p className="text-gold text-xs font-semibold uppercase tracking-widest mb-3">{t('svc_tag')}</p>
-            <h2 className="text-4xl md:text-5xl font-black text-off-white">{t('svc_title')}</h2>
+          <div className="mb-10 sm:mb-14 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <div className="divider mb-4"/>
+              <p className="text-gold text-xs font-semibold uppercase tracking-widest mb-3">
+                {isSq ? 'Makinat Tona' : 'Our Fleet'}
+              </p>
+              <h2 className="text-4xl md:text-5xl font-black text-off-white">
+                {isSq ? 'Makinat më Popullore' : 'Most Popular Cars'}
+              </h2>
+            </div>
+            <Link href={carsLink}
+              className="text-sm text-gold hover:text-gold/70 font-semibold transition-colors whitespace-nowrap">
+              {isSq ? 'Shiko të gjitha →' : 'View all →'}
+            </Link>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((s) => (
-              <div key={s.title} className="bg-dark-3 border border-white/5 hover:border-gold/30 rounded-2xl p-7 transition-all duration-300 group hover:-translate-y-1">
-                <div className="text-3xl mb-5">{s.icon}</div>
-                <h3 className="text-off-white font-bold text-lg mb-2">{s.title}</h3>
-                <p className="text-muted text-sm leading-relaxed">{s.desc}</p>
-              </div>
-            ))}
-          </div>
+
+          {popularCars.length === 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1,2,3,4].map((i) => (
+                <div key={i} className="bg-dark-3 border border-white/5 rounded-2xl overflow-hidden animate-pulse">
+                  <div className="h-48 bg-dark-4"/>
+                  <div className="p-5 space-y-3">
+                    <div className="h-3 w-2/3 bg-dark-4 rounded"/>
+                    <div className="h-3 w-1/2 bg-dark-4 rounded"/>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {popularCars.map((car) => (
+                <div key={car.id} className="bg-dark-3 border border-white/5 hover:border-gold/30 rounded-2xl overflow-hidden transition-all duration-300 group hover:-translate-y-1 flex flex-col">
+                  <div className="relative h-48 overflow-hidden bg-dark-4">
+                    {car.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={car.imageUrl} alt={car.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted text-sm">No photo</div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
+                    <span className="absolute bottom-3 left-3 bg-gold text-dark text-xs font-black px-2.5 py-1 rounded-lg">
+                      €{car.price}/day
+                    </span>
+                  </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    <p className="text-muted text-xs uppercase tracking-wider mb-0.5">{car.brandName}</p>
+                    <p className="text-off-white font-bold text-lg mb-1 truncate">{car.name}</p>
+                    {car.model && <p className="text-muted text-xs mb-4">{car.model}</p>}
+                    <div className="flex gap-2 mt-auto">
+                      <Link href={`/cars/${car.id}`}
+                        className="flex-1 py-2 text-center border border-white/10 hover:border-gold/40 text-muted hover:text-gold rounded-lg text-xs font-semibold transition-all">
+                        {isSq ? 'Detaje' : 'Details'}
+                      </Link>
+                      <Link href={`/inquiry/${car.id}`}
+                        className="flex-1 py-2 text-center btn-gold rounded-lg text-xs font-bold shine">
+                        {isSq ? 'Rezervo' : 'Book Now'}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
