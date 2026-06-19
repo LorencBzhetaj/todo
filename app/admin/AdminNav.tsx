@@ -26,13 +26,9 @@ export default function AdminNav() {
         {/* Logo */}
         <div className="px-6 py-6 border-b border-white/5">
           <Link href="/" className="flex items-center gap-3 group mb-1">
-            <div className="w-8 h-8 border border-gold/40 rounded-lg flex items-center justify-center group-hover:border-gold transition-colors">
-              <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                <path d="M19 17H5a2 2 0 0 1-2-2V9l2-4h14l2 4v6a2 2 0 0 1-2 2z"/>
-                <circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>
-              </svg>
-            </div>
-            <span className="font-black text-lg text-off-white">Drive<span className="gold-text">Elite</span></span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="TodoRental" width={32} height={32} className="rounded-full object-cover border border-gold/40 group-hover:border-gold transition-colors"/>
+            <span className="font-black text-lg text-off-white">Todo<span className="gold-text">Rental</span></span>
           </Link>
           <p className="text-xs text-muted ml-11">Admin Panel</p>
         </div>
@@ -74,13 +70,9 @@ export default function AdminNav() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-dark-2/95 backdrop-blur-xl border-b border-white/5">
         <div className="flex items-center justify-between px-4 h-14">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 border border-gold/40 rounded-lg flex items-center justify-center">
-              <svg className="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                <path d="M19 17H5a2 2 0 0 1-2-2V9l2-4h14l2 4v6a2 2 0 0 1-2 2z"/>
-                <circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>
-              </svg>
-            </div>
-            <span className="font-black text-base text-off-white">Drive<span className="gold-text">Elite</span></span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="TodoRental" width={28} height={28} className="rounded-full object-cover border border-gold/40"/>
+            <span className="font-black text-base text-off-white">Todo<span className="gold-text">Rental</span></span>
           </Link>
           <button onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu"
             className="p-2 text-muted hover:text-off-white transition-colors">

@@ -26,11 +26,9 @@ export default function AdminLoginPage() {
 
       <div className="relative w-full max-w-md">
         <div className="text-center mb-10">
-          <div className="w-14 h-14 border border-gold/40 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-              <path d="M19 17H5a2 2 0 0 1-2-2V9l2-4h14l2 4v6a2 2 0 0 1-2 2z"/>
-              <circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>
-            </svg>
+          <div className="mx-auto mb-4 w-14 h-14">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="TodoRental" width={56} height={56} className="rounded-full object-cover border border-gold/40 w-full h-full"/>
           </div>
           <h1 className="text-3xl font-black text-off-white">Todo<span className="gold-text">Rental</span></h1>
           <p className="text-muted text-sm mt-1">Admin Panel</p>
@@ -50,7 +48,7 @@ export default function AdminLoginPage() {
             <div>
               <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">Email</label>
               <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@driveeelite.al" autoComplete="email" required
+                placeholder="admin@todorental.al" autoComplete="email" required
                 className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
             </div>
             <div>
