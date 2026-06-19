@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLang } from '@/lib/useLang';
 
@@ -11,6 +11,14 @@ export default function HomeClient() {
   const [pickupDate, setPickupDate] = useState('');
   const [dropoffDate, setDropoffDate] = useState('');
   const [carType, setCarType] = useState('');
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => {});
+  }, []);
 
   const today = new Date().toISOString().split('T')[0];
   const WA = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '355697536334';
@@ -60,7 +68,7 @@ export default function HomeClient() {
       <section className="relative h-screen flex flex-col overflow-hidden">
         {/* Video */}
         <div className="absolute inset-0 z-0">
-          <video autoPlay muted loop playsInline preload="auto"
+          <video ref={videoRef} autoPlay muted loop playsInline preload="auto"
             className="w-full h-full object-cover object-center"
             aria-hidden="true">
             <source src="/hero.mp4" type="video/mp4"/>
