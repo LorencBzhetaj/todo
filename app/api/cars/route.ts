@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     const [totalCount, allCars] = await Promise.all([
       db.car.count(),
       db.car.findMany({
-        orderBy: { createdAt: 'asc' },
+        orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),

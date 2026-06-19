@@ -15,6 +15,7 @@ model Car {
   brandName   String
   price       Int
   imageUrl    String?
+  position    Int        @default(99)
   createdAt   DateTime   @default(now())
   images      CarImage[]
   bookings    Booking[]
