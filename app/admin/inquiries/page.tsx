@@ -4,6 +4,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { getBookings, getCars, createBooking, confirmBooking, cancelBooking, deleteBooking } from '@/lib/api-client';
 import type { Booking, Car } from '@/types';
+import { DayPicker, DateRange } from 'react-day-picker';
+import { format } from 'date-fns';
+import 'react-day-picker/dist/style.css';
 
 const EMPTY_BOOKING = {
   carId: 0, fullName: '', email: '', phoneNumber: '',
@@ -15,6 +18,8 @@ function CreateBookingModal({ cars, onClose, onSave }: {
   cars: Car[]; onClose: () => void; onSave: () => void;
 }) {
   const [form, setForm] = useState({ ...EMPTY_BOOKING });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [showCal, setShowCal] = useState(false);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -112,18 +117,42 @@ function CreateBookingModal({ cars, onClose, onSave }: {
               placeholder="Tirana Airport, Hotel..." className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Pick-up Date</label>
-              <input name="pickupDate" type="date" value={form.pickupDate} onChange={handleChange}
-                className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
-            </div>
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Drop-off Date</label>
-              <input name="dropoffDate" type="date" value={form.dropoffDate} onChange={handleChange}
-                min={form.pickupDate || undefined}
-                className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
-            </div>
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Dates</label>
+            <button type="button" onClick={() => setShowCal(p => !p)}
+              className="input-dark w-full px-4 py-3 rounded-xl text-sm text-left">
+              {dateRange?.from
+                ? `${format(dateRange.from, 'dd MMM yyyy')}${dateRange.to ? ` → ${format(dateRange.to, 'dd MMM yyyy')}` : ''}`
+                : 'Select dates...'}
+            </button>
+            {showCal && (
+              <div className="mt-2 rounded-xl overflow-hidden border border-white/10">
+                <style>{`
+                  .rdp { --rdp-accent-color: #C9A84C; --rdp-background-color: #C9A84C22; margin:0; }
+                  .rdp-day_selected, .rdp-day_range_start, .rdp-day_range_end { background:#C9A84C !important; color:#111 !important; }
+                  .rdp-day_range_middle { background:#C9A84C22 !important; color:#e5d9b6 !important; }
+                  .rdp { background:#1a1a1a; color:#e5d9b6; padding:12px; }
+                  .rdp-head_cell, .rdp-caption_label { color:#C9A84C; font-size:0.75rem; }
+                  .rdp-button:hover:not([disabled]) { background:#C9A84C33 !important; }
+                  .rdp-nav_button { color:#C9A84C; }
+                `}</style>
+                <DayPicker
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={(r) => {
+                    setDateRange(r);
+                    setForm(p => ({
+                      ...p,
+                      pickupDate: r?.from ? r.from.toISOString() : '',
+                      dropoffDate: r?.to ? r.to.toISOString() : '',
+                    }));
+                    if (r?.from && r?.to) setShowCal(false);
+                  }}
+                  disabled={{ before: new Date() }}
+                  numberOfMonths={1}
+                />
+              </div>
+            )}
           </div>
 
           {totalPrice && rentalDays && (
