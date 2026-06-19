@@ -40,11 +40,7 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
   }, [car.isAvailable, car.activeBookings]);
 
   return (
-    <article className={`bg-dark-3 border rounded-2xl overflow-hidden transition-all duration-300 group shine ${
-      car.isAvailable
-        ? 'border-white/5 hover:border-gold/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-gold/5'
-        : 'border-red-500/20 opacity-80'
-    }`}>
+    <article className="bg-dark-3 border border-white/5 hover:border-gold/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-gold/5 rounded-2xl overflow-hidden transition-all duration-300 group shine">
       <div className="relative h-52 overflow-hidden cursor-zoom-in"
         role="button" tabIndex={0}
         onClick={() => onLightbox(car)}
@@ -58,9 +54,7 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
             const placeholder = img.parentElement?.querySelector('.img-placeholder') as HTMLElement | null;
             if (placeholder) placeholder.style.display = 'flex';
           }}
-          className={`w-full h-full object-cover transition-transform duration-700 ${
-            car.isAvailable ? 'group-hover:scale-105' : 'grayscale-[60%]'
-          }`}/>
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
         <div className="img-placeholder w-full h-full items-center justify-center bg-dark-4 text-muted text-sm hidden absolute inset-0">
           <svg className="w-10 h-10 opacity-30" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path d="M19 17H5a2 2 0 0 1-2-2V9l2-4h14l2 4v6a2 2 0 0 1-2 2z"/>
@@ -69,20 +63,6 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"/>
 
-        {/* Availability badge */}
-        <div className="absolute top-3 left-3">
-          {car.isAvailable ? (
-            <span className="bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"/>
-              Available
-            </span>
-          ) : (
-            <span className="bg-red-500/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white"/>
-              Booked
-            </span>
-          )}
-        </div>
 
         {/* Price */}
         <div className="absolute bottom-3 right-3">
@@ -99,14 +79,6 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
           <h3 className="text-off-white font-bold text-lg leading-tight">{car.name}</h3>
         </div>
 
-        {/* Next available date if booked */}
-        {!car.isAvailable && nextAvailableDate && (
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 mb-3">
-            <p className="text-amber-400 text-xs font-medium">
-              Available from: <span className="font-bold">{nextAvailableDate}</span>
-            </p>
-          </div>
-        )}
 
         {/* Specs — show model if available */}
         {car.model && (
@@ -131,15 +103,9 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
             Details
           </button>
           <button
-            onClick={() => car.isAvailable && onEnquire(car.id)}
-            disabled={!car.isAvailable}
-            aria-disabled={!car.isAvailable}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
-              car.isAvailable
-                ? 'btn-gold shine cursor-pointer'
-                : 'bg-dark-4 border border-white/10 text-muted cursor-not-allowed opacity-60'
-            }`}>
-            {car.isAvailable ? 'Book Now' : 'Unavailable'}
+            onClick={() => onEnquire(car.id)}
+            className="flex-1 py-2.5 rounded-xl text-sm font-bold btn-gold shine cursor-pointer transition-all">
+            Book Now
           </button>
         </div>
       </div>
