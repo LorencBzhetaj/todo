@@ -24,7 +24,7 @@ export default function HomeClient() {
   const fetchPopular = useCallback(() => {
     fetch('/api/cars?limit=4')
       .then((r) => r.json())
-      .then((d) => { if (d.cars) setPopularCars(d.cars.slice(0, 4)); })
+      .then((d) => { if (d.cars) setPopularCars([...d.cars].sort((a, b) => b.price - a.price).slice(0, 4)); })
       .catch(() => {});
   }, []);
   useEffect(() => { fetchPopular(); }, [fetchPopular]);
