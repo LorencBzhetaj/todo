@@ -115,7 +115,7 @@ export default function CarDetailClient({ carId }: { carId: string }) {
                 onKeyDown={e => e.key === 'Enter' && activeImg && setLightbox(activeImg)} aria-label="Enlarge image">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={activeImg ?? car.imageUrl ?? ''} alt={car.name}
-                  className={`w-full h-72 sm:h-80 object-cover group-hover:scale-105 transition-transform duration-700 ${!car.isAvailable ? 'grayscale' : ''}`}
+                  className="w-full h-72 sm:h-80 object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="eager"/>
                 <div className="absolute bottom-4 right-4 bg-dark/80 backdrop-blur-sm border border-gold/20 text-gold text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>

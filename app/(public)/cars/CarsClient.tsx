@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import CarSkeleton from '@/components/ui/CarSkeleton';
 import Lightbox from '@/components/ui/Lightbox';
 import { useDebounce } from '@/lib/useDebounce';
@@ -40,10 +41,11 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
   }, [car.isAvailable, car.activeBookings]);
 
   return (
+    <Link href={`/cars/${car.id}`} className="block">
     <article className="bg-dark-3 border border-white/5 hover:border-gold/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-gold/5 rounded-2xl overflow-hidden transition-all duration-300 group shine">
       <div className="relative h-52 overflow-hidden cursor-zoom-in"
         role="button" tabIndex={0}
-        onClick={() => onLightbox(car)}
+        onClick={(e) => { e.preventDefault(); onLightbox(car); }}
         onKeyDown={(e) => e.key === 'Enter' && onLightbox(car)}
         aria-label={`View image of ${car.name}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,18 +100,19 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
         )}
 
         <div className="flex gap-2">
-          <button onClick={() => onDetail(car.id)}
+          <button onClick={(e) => { e.preventDefault(); onDetail(car.id); }}
             className="flex-1 bg-dark-4 hover:bg-dark-5 border border-white/8 text-off-white font-semibold py-2.5 rounded-xl text-sm transition-all">
             Details
           </button>
           <button
-            onClick={() => onEnquire(car.id)}
+            onClick={(e) => { e.preventDefault(); onEnquire(car.id); }}
             className="flex-1 py-2.5 rounded-xl text-sm font-bold btn-gold shine cursor-pointer transition-all">
             Book Now
           </button>
         </div>
       </div>
     </article>
+    </Link>
   );
 });
 
