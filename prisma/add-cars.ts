@@ -49,6 +49,33 @@ async function main() {
       imageUrl: '/rolls.jpg',
       extraImages: [],
     },
+    {
+      name: 'Cayenne',
+      brandName: 'Porsche',
+      model: 'Cayenne Turbo S',
+      description: 'The most powerful Cayenne ever. Sport Chrono Package, adaptive air suspension, and 640 hp at your command.',
+      price: 260,
+      imageUrl: '/porsche.jpg',
+      extraImages: [],
+    },
+    {
+      name: 'A8 L',
+      brandName: 'Audi',
+      model: 'A8 L 60 TFSI',
+      description: 'Flagship luxury sedan with predictive active suspension, rear executive seat package, and quattro all-wheel drive.',
+      price: 190,
+      imageUrl: '/audi.jpg',
+      extraImages: [],
+    },
+    {
+      name: 'CLS 450',
+      brandName: 'Mercedes-Benz',
+      model: 'CLS 450 4MATIC',
+      description: 'Four-door coupé elegance meets sport performance. Shooting Brake silhouette with AMG styling and inline-six power.',
+      price: 180,
+      imageUrl: '/cls.jpg',
+      extraImages: [],
+    },
   ];
 
   for (const { extraImages, ...data } of cars) {
