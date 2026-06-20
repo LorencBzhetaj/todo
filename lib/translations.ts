@@ -54,10 +54,13 @@ export const translations = {
     // About
     about_tag: 'Who We Are', about_title: 'About TodoRental',
     about_mission_tag: 'Our Mission',
+    about_mission_title: 'We make premium car rental simple & stress-free',
+    about_p1: 'We believe renting a premium car should be exciting, not stressful. That\'s why we\'ve built a fleet of inspected, luxury vehicles available at transparent prices with zero hidden fees.',
+    about_p2: 'Whether you\'re a tourist exploring Albania, a business traveler, or someone who simply wants to drive in style — our team ensures your experience is nothing short of excellent.',
     about_find_tag: 'Find Us', about_find_title: 'Our Location',
 
     // Contact
-    contact_title: 'Get in touch,', contact_title2: 'drive tomorrow.',
+    contact_title: 'Get in touch and', contact_title2: 'drive in style.',
     contact_sub: 'Interested in a vehicle or want to arrange a booking? We\'re here to help.',
 
     // Footer
@@ -71,8 +74,8 @@ export const translations = {
 
     // Home hero
     home_badge: 'Makinë me Qira Premium · Tiranë',
-    home_hero1: 'Drejto', home_hero2: 'Ekselencën.',
-    home_sub: 'Makina premium. Rezervim i lehtë. Udhëtime të paharrueshme.',
+    home_hero1: 'Udhëtoni me', home_hero2: 'Klas.',
+    home_sub: 'Makina luksoze. Rezervime pa mundim. Eksperienca që mbeten në mendje.',
     home_book: 'Rezervo Tani', home_fleet: 'Shiko Flotën →',
 
     // Quick booking
@@ -109,8 +112,8 @@ export const translations = {
     cta_reserve: 'Rezervo Makinën', cta_call: 'Na Telefono',
 
     // Cars page
-    cars_tag: 'Flota Jonë', cars_title: 'Automjete Premium',
-    cars_sub: 'Çdo makinë në flotën tonë është e mirëmbajtur me kujdes dhe gati për udhëtimin tuaj.',
+    cars_tag: 'Flota Jonë', cars_title: 'Makina të Përzgjedhura',
+    cars_sub: 'Nga sedanët luksozë te SUV-të prestigjiozë, çdo automjet është përgatitur për t\'ju ofruar rehati, performancë dhe elegancë.',
     cars_search: 'Kërko markë, model...', cars_max_price: 'Maks €/ditë',
     cars_available: 'Vetëm të lira', cars_clear: 'Pastro ×',
     cars_no_match: 'Asnjë makinë nuk përputhet', cars_no_match_sub: 'Provo të ndryshosh filtrat',
@@ -119,10 +122,13 @@ export const translations = {
     // About
     about_tag: 'Kush Jemi', about_title: 'Rreth TodoRental',
     about_mission_tag: 'Misioni Ynë',
-    about_find_tag: 'Na Gjeni', about_find_title: 'Vendndodhja Jonë',
+    about_mission_title: 'Ne besojmë se luksi qëndron tek detajet.',
+    about_p1: 'TODO Rental ofron automjete premium të përzgjedhura me kujdes, një proces rezervimi të thjeshtë dhe një shërbim të dedikuar për t\'ju garantuar një eksperiencë të qetë, elegante dhe të paharrueshme në çdo kilometër.',
+    about_p2: '',
+    about_find_tag: 'Na gjeni', about_find_title: 'Vendndodhja',
 
     // Contact
-    contact_title: 'Na kontakto,', contact_title2: 'ngasë nesër.',
+    contact_title: 'Kontakto TODO Rental', contact_title2: 'Çdo udhëtim fillon me një bisedë.',
     contact_sub: 'Të interesuar për një makinë ose dëshironi të bëni rezervim? Jemi këtu t\'ju ndihmojmë.',
 
     // Footer

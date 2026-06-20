@@ -198,7 +198,7 @@ export default function HomeClient() {
                 {isSq ? 'Makinat Tona' : 'Our Fleet'}
               </p>
               <h2 className="text-4xl md:text-5xl font-black text-off-white">
-                {isSq ? 'Makinat më Popullore' : 'Most Popular Cars'}
+                {isSq ? 'Më të preferuarat' : 'Most Popular Cars'}
               </h2>
             </div>
             <Link href={carsLink}

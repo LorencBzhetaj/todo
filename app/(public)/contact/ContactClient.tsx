@@ -1,9 +1,12 @@
 'use client';
+import { useLang } from '@/lib/useLang';
 
 const WA = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '355697536334';
 const EMAIL = 'todorental@gmail.com';
 
 export default function ContactClient() {
+  const { t } = useLang();
+
   return (
     <div className="bg-dark min-h-screen text-off-white">
       {/* Header */}
@@ -11,9 +14,9 @@ export default function ContactClient() {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(ellipse at 20% 50%, #C9A84C, transparent 60%)' }} aria-hidden="true"/>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-8 text-center">
           <div className="divider mb-4 mx-auto w-12"/>
-          <p className="text-gold text-xs font-semibold uppercase tracking-widest mb-4">Contact TodoRental</p>
+          <p className="text-gold text-xs font-semibold uppercase tracking-widest mb-4">{t('nav_contact')}</p>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-none mb-4">
-            Get in touch and<br/><span className="gold-text">drive in style.</span>
+            {t('contact_title')}<br/><span className="gold-text">{t('contact_title2')}</span>
           </h1>
         </div>
       </section>
