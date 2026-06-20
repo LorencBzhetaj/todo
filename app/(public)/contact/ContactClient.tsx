@@ -63,19 +63,23 @@ export default function ContactClient() {
           </a>
         </div>
 
-        {/* Right — map link */}
+        {/* Right — static map image linking to Google Maps */}
         <a href="https://maps.google.com/?q=Zogu+i+Zi+Tirane+Albania" target="_blank" rel="noopener noreferrer"
-          className="glass rounded-2xl min-h-[320px] flex flex-col items-center justify-center gap-4 hover:border-gold/40 transition-all group">
-          <div className="w-16 h-16 bg-gold/10 border border-gold/20 rounded-2xl flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-dark transition-all">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-            </svg>
+          className="relative rounded-2xl overflow-hidden border border-white/5 min-h-[320px] block group hover:border-gold/40 transition-all">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://staticmap.openstreetmap.de/staticmap.php?center=41.3275,19.8187&zoom=15&size=600x400&markers=41.3275,19.8187,red-pushpin"
+            alt="TodoRental location map"
+            className="w-full h-full object-cover min-h-[320px]"
+            style={{ filter: 'grayscale(0.3) contrast(0.9)' }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-dark/80 backdrop-blur-sm px-5 py-3 flex items-center justify-between">
+            <div>
+              <p className="text-off-white font-bold text-sm">Zogu i Zi, Tiranë</p>
+              <p className="text-muted text-xs">Rinas Airport</p>
+            </div>
+            <span className="text-gold text-xs font-semibold group-hover:underline">Open Maps →</span>
           </div>
-          <div className="text-center">
-            <p className="text-off-white font-bold mb-1">Zogu i Zi, Tiranë</p>
-            <p className="text-muted text-sm">Rinas Airport</p>
-          </div>
-          <span className="text-gold text-sm font-semibold group-hover:underline">Open in Google Maps →</span>
         </a>
       </section>
 
