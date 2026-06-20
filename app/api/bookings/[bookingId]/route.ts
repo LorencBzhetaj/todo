@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
 
-const patchSchema = z.object({ status: z.string().min(1).max(50) });
+const patchSchema = z.object({ status: z.enum(['Pending', 'Confirmed', 'Cancelled']) });
 
 interface BookingWithCar {
   id: number;

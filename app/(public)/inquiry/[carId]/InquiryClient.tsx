@@ -49,7 +49,7 @@ export default function InquiryClient({ carId }: { carId: string }) {
             }))
         );
       })
-      .catch(() => {});
+      .catch(() => { setError('Could not load availability. Some dates may not reflect current bookings.'); });
   }, [carId]);
 
   const pickupDate  = range?.from ? format(range.from, 'yyyy-MM-dd') : '';

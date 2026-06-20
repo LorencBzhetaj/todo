@@ -22,7 +22,7 @@ export default function HomeClient() {
 
   const [popularCars, setPopularCars] = useState<{ id: number; name: string; brandName: string; price: number; imageUrl?: string | null; model?: string | null }[]>([]);
   const fetchPopular = useCallback(() => {
-    fetch('/api/cars?limit=4')
+    fetch('/api/cars?pageSize=4')
       .then((r) => r.json())
       .then((d) => { if (d.cars) setPopularCars([...d.cars].sort((a, b) => b.price - a.price).slice(0, 4)); })
       .catch(() => {});
@@ -122,34 +122,34 @@ export default function HomeClient() {
             {/* Mobile: 2-col grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 items-end">
               <div className="col-span-2 sm:col-span-1">
-                <label className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
+                <label htmlFor="qb-location" className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
                   {t('qb_location')}
                 </label>
-                <input type="text" placeholder={t('qb_location_ph')} value={pickupLocation}
+                <input id="qb-location" type="text" placeholder={t('qb_location_ph')} value={pickupLocation}
                   onChange={(e) => setPickupLocation(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white placeholder-white/25 focus:outline-none focus:border-gold/50 transition-colors"/>
               </div>
               <div>
-                <label className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
+                <label htmlFor="qb-pickup" className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
                   {t('qb_pickup')}
                 </label>
-                <input type="date" value={pickupDate} min={today}
+                <input id="qb-pickup" type="date" value={pickupDate} min={today}
                   onChange={(e) => { setPickupDate(e.target.value); if (dropoffDate && e.target.value > dropoffDate) setDropoffDate(''); }}
                   className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:outline-none focus:border-gold/50 transition-colors"/>
               </div>
               <div>
-                <label className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
+                <label htmlFor="qb-dropoff" className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
                   {t('qb_dropoff')}
                 </label>
-                <input type="date" value={dropoffDate} min={pickupDate || today}
+                <input id="qb-dropoff" type="date" value={dropoffDate} min={pickupDate || today}
                   onChange={(e) => setDropoffDate(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:outline-none focus:border-gold/50 transition-colors"/>
               </div>
               <div className="hidden md:block">
-                <label className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
+                <label htmlFor="qb-type" className="block text-[10px] text-white/40 mb-1 uppercase tracking-wider">
                   {t('qb_type')}
                 </label>
-                <select value={carType} onChange={(e) => setCarType(e.target.value)}
+                <select id="qb-type" value={carType} onChange={(e) => setCarType(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:outline-none focus:border-gold/50 transition-colors">
                   <option value="" className="bg-neutral-900">{t('qb_all')}</option>
                   <option className="bg-neutral-900">Luxury</option>
@@ -226,7 +226,7 @@ export default function HomeClient() {
                   <div className="relative h-48 overflow-hidden bg-dark-4">
                     {car.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={car.imageUrl} alt={car.name}
+                      <img src={car.imageUrl} alt={car.name} width={400} height={192}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-muted text-sm">No photo</div>
@@ -241,7 +241,7 @@ export default function HomeClient() {
                     <p className="text-off-white font-bold text-lg mb-1 truncate">{car.name}</p>
                     {car.model && <p className="text-muted text-xs mb-4">{car.model}</p>}
                     <div className="flex gap-2 mt-auto">
-                      <Link href={`/cars/${car.id}`}
+                      <Link href={isSq ? `/sq/makina/${car.id}` : `/cars/${car.id}`}
                         className="flex-1 py-2 text-center border border-white/10 hover:border-gold/40 text-muted hover:text-gold rounded-lg text-xs font-semibold transition-all">
                         {isSq ? 'Detaje' : 'Details'}
                       </Link>

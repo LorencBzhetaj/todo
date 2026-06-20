@@ -10,7 +10,7 @@ const createSchema = z.object({
   model: z.string().max(200).optional(),
   brandName: z.string().min(1).max(200),
   price: z.number().int().min(0),
-  imageUrl: z.string().max(15000000).optional(),
+  imageUrl: z.string().max(2000).optional(),
 });
 
 export async function GET(req: NextRequest) {
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     const pickup  = req.nextUrl.searchParams.get('pickup');
     const dropoff = req.nextUrl.searchParams.get('dropoff');
     const page    = Math.max(1, Number(req.nextUrl.searchParams.get('page') ?? '1'));
-    const rawSize = Number(req.nextUrl.searchParams.get('pageSize') ?? '50');
+    const rawSize = Number(req.nextUrl.searchParams.get('pageSize') ?? req.nextUrl.searchParams.get('limit') ?? '50');
     const pageSize = Math.min(Math.max(1, rawSize), 50);
     const now = new Date();
 

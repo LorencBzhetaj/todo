@@ -8,7 +8,14 @@ export function escapeHtml(str: string): string {
 }
 
 export function stripTags(str: string): string {
-  return str.replace(/<[^>]*>/g, '');
+  let out = '';
+  let inTag = false;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === '<') { inTag = true; continue; }
+    if (inTag && str[i] === '>') { inTag = false; continue; }
+    if (!inTag) out += str[i];
+  }
+  return out;
 }
 
 export function sanitizeInput(str: string, maxLen = 500): string {

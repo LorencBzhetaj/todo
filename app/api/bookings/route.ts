@@ -81,14 +81,16 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    let totalPrice = data.totalPrice;
-    if (!totalPrice && data.pickupDate && data.dropoffDate) {
-      const car = await db.car.findUnique({ where: { id: data.carId } });
-      if (car) {
-        const days = Math.ceil(
-          (new Date(data.dropoffDate).getTime() - new Date(data.pickupDate).getTime()) / (1000 * 60 * 60 * 24)
-        );
-        if (days > 0) totalPrice = car.price * days;
+    let totalPrice: number | undefined;
+    if (data.pickupDate && data.dropoffDate) {
+      const pickupMs  = new Date(data.pickupDate).getTime();
+      const dropoffMs = new Date(data.dropoffDate).getTime();
+      if (!isNaN(pickupMs) && !isNaN(dropoffMs)) {
+        const car = await db.car.findUnique({ where: { id: data.carId } });
+        if (car) {
+          const days = Math.ceil((dropoffMs - pickupMs) / (1000 * 60 * 60 * 24));
+          if (days > 0) totalPrice = car.price * days;
+        }
       }
     }
 

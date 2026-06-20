@@ -49,7 +49,7 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
         onKeyDown={(e) => e.key === 'Enter' && onLightbox(car)}
         aria-label={`View image of ${car.name}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={car.imageUrl ?? '/placeholder.jpg'} alt={`${car.name} rental`} loading="lazy"
+        <img src={car.imageUrl ?? '/placeholder.jpg'} alt={`${car.name} rental`} width={600} height={400} loading="lazy"
           onError={(e) => {
             const img = e.target as HTMLImageElement;
             img.style.display = 'none';

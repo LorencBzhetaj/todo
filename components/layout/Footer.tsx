@@ -69,7 +69,7 @@ export default function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-widest text-gold/70 mb-5">Contact</h4>
             <ul className="space-y-4">
               {[
-                { href: 'https://maps.google.com/?q=Fresku+Tirana', label: 'Fresku, Tiranë, Albania',
+                { href: 'https://share.google/5IoOzklmyuVG5H1H5', label: 'Zogu i Zi – Aeroporti Nënë Tereza, Tiranë',
                   icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></> },
                 { href: `tel:+${WA}`, label: `+${WA}`,
                   icon: <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 11.3 19.79 19.79 0 0 1 .07 2.7 2 2 0 0 1 2.06.5h3a2 2 0 0 1 2 1.72 19.79 19.79 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L6.09 8.37a16 16 0 0 0 6.29 6.29l1.24-1.22a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/> },

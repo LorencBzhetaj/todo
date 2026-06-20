@@ -141,10 +141,11 @@ function CreateBookingModal({ cars, onClose, onSave }: {
                   selected={dateRange}
                   onSelect={(r) => {
                     setDateRange(r);
+                    const fmt = (d: Date) => d.toISOString().split('T')[0];
                     setForm(p => ({
                       ...p,
-                      pickupDate: r?.from ? r.from.toISOString() : '',
-                      dropoffDate: r?.to ? r.to.toISOString() : '',
+                      pickupDate: r?.from ? fmt(r.from) : '',
+                      dropoffDate: r?.to ? fmt(r.to) : '',
                     }));
                     if (r?.from && r?.to) setShowCal(false);
                   }}
