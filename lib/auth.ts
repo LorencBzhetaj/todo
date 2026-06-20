@@ -39,5 +39,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET ?? (() => { throw new Error('NEXTAUTH_SECRET env var is not set'); })(),
+  secret: process.env.NEXTAUTH_SECRET,
 };

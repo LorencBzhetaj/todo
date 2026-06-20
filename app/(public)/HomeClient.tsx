@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLang } from '@/lib/useLang';
@@ -225,9 +226,8 @@ export default function HomeClient() {
                 <div key={car.id} className="bg-dark-3 border border-white/5 hover:border-gold/30 rounded-2xl overflow-hidden transition-all duration-300 group hover:-translate-y-1 flex flex-col">
                   <div className="relative h-48 overflow-hidden bg-dark-4">
                     {car.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={car.imageUrl} alt={car.name} width={400} height={192}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                      <Image src={car.imageUrl} alt={car.name} fill sizes="(max-width:768px) 100vw, 25vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"/>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-muted text-sm">No photo</div>
                     )}

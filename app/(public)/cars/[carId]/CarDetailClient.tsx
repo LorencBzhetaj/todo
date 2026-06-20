@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getCarImages } from '@/lib/api-client';
 import type { CarImage } from '@/types';
 
@@ -97,11 +98,9 @@ export default function CarDetailClient({ carId }: { carId: string }) {
 
             {/* Images */}
             <div>
-              <div className="relative rounded-2xl overflow-hidden border border-white/5 mb-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={activeImg ?? car.imageUrl ?? ''} alt={car.name}
-                  className="w-full h-72 sm:h-80 object-cover"
-                  loading="eager"/>
+              <div className="relative rounded-2xl overflow-hidden border border-white/5 mb-3 h-72 sm:h-80">
+                <Image src={activeImg ?? car.imageUrl ?? ''} alt={car.name} fill
+                  sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" priority/>
               </div>
               {allImages.length > 1 && (
                 <div className="flex gap-2 flex-wrap">
@@ -109,8 +108,7 @@ export default function CarDetailClient({ carId }: { carId: string }) {
                     <button key={img.id} onClick={() => setActiveImg(img.imageUrl)}
                       aria-pressed={activeImg === img.imageUrl} aria-label={`Image ${i + 1}`}
                       className={`w-16 h-12 rounded-lg overflow-hidden border-2 transition-all ${activeImg === img.imageUrl ? 'border-gold' : 'border-white/10 hover:border-gold/40'}`}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={img.imageUrl} alt="" loading="lazy" className="w-full h-full object-cover"/>
+                      <Image src={img.imageUrl} alt="" fill sizes="64px" className="object-cover"/>
                     </button>
                   ))}
                 </div>

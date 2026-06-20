@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import CarSkeleton from '@/components/ui/CarSkeleton';
 import Lightbox from '@/components/ui/Lightbox';
 import { useDebounce } from '@/lib/useDebounce';
@@ -48,15 +49,9 @@ const CarCard = memo(function CarCard({ car, pickupDate, dropoffDate, onLightbox
         onClick={(e) => { e.preventDefault(); onLightbox(car); }}
         onKeyDown={(e) => e.key === 'Enter' && onLightbox(car)}
         aria-label={`View image of ${car.name}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={car.imageUrl ?? '/placeholder.jpg'} alt={`${car.name} rental`} width={600} height={400} loading="lazy"
-          onError={(e) => {
-            const img = e.target as HTMLImageElement;
-            img.style.display = 'none';
-            const placeholder = img.parentElement?.querySelector('.img-placeholder') as HTMLElement | null;
-            if (placeholder) placeholder.style.display = 'flex';
-          }}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+        <Image src={car.imageUrl ?? '/placeholder.jpg'} alt={`${car.name} rental`} fill
+          sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"/>
         <div className="img-placeholder w-full h-full items-center justify-center bg-dark-4 text-muted text-sm hidden absolute inset-0">
           <svg className="w-10 h-10 opacity-30" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path d="M19 17H5a2 2 0 0 1-2-2V9l2-4h14l2 4v6a2 2 0 0 1-2 2z"/>
@@ -125,7 +120,7 @@ export default function CarsClient() {
   const [error, setError] = useState('');
   const [lightbox, setLightbox] = useState<CarWithAvail | null>(null);
 
-  const [search, setSearch] = useState(searchParams.get('location') ?? '');
+  const [search, setSearch] = useState('');
   const [filterBrand, setFilterBrand] = useState('All');
   const [filterMaxPrice, setFilterMaxPrice] = useState('');
   const [filterType, setFilterType] = useState(searchParams.get('type') ?? 'All');

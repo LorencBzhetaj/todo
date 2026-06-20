@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useLang } from '@/lib/useLang';
 
 export default function AboutClient() {
@@ -31,9 +32,8 @@ export default function AboutClient() {
           <p className="text-muted leading-relaxed mb-5">{t('about_p1')}</p>
           {t('about_p2') && <p className="text-muted leading-relaxed">{t('about_p2')}</p>}
         </div>
-        <div className="rounded-2xl overflow-hidden border border-white/5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/about.jpg" alt="About TodoRental" className="w-full h-full object-cover"/>
+        <div className="relative rounded-2xl overflow-hidden border border-white/5 min-h-[300px]">
+          <Image src="/about.jpg" alt="About TodoRental" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover"/>
         </div>
       </section>
 
