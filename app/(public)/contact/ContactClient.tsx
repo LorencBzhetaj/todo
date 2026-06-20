@@ -63,13 +63,20 @@ export default function ContactClient() {
           </a>
         </div>
 
-        {/* Right — map */}
-        <div className="rounded-2xl overflow-hidden border border-white/5 min-h-[320px]">
-          <iframe title="TodoRental Location" width="100%" height="100%"
-            style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(0.85)', minHeight: '320px' }}
-            loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.0!2d19.8187!3d41.3275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE5JzM5LjAiTiAxOcKwNDknMDcuMiJF!5e0!3m2!1sen!2sal!4v1234567890"/>
-        </div>
+        {/* Right — map link */}
+        <a href="https://maps.google.com/?q=Zogu+i+Zi+Tirane+Albania" target="_blank" rel="noopener noreferrer"
+          className="glass rounded-2xl min-h-[320px] flex flex-col items-center justify-center gap-4 hover:border-gold/40 transition-all group">
+          <div className="w-16 h-16 bg-gold/10 border border-gold/20 rounded-2xl flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-dark transition-all">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div className="text-center">
+            <p className="text-off-white font-bold mb-1">Zogu i Zi, Tiranë</p>
+            <p className="text-muted text-sm">Rinas Airport</p>
+          </div>
+          <span className="text-gold text-sm font-semibold group-hover:underline">Open in Google Maps →</span>
+        </a>
       </section>
 
       {/* Social links */}
