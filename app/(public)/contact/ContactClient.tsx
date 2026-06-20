@@ -1,21 +1,9 @@
 'use client';
-import { useState } from 'react';
 
 const WA = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '355697536334';
 const EMAIL = 'todorental@gmail.com';
 
 export default function ContactClient() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const text = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-    window.open(`https://wa.me/${WA}?text=${text}`, '_blank');
-    setSent(true);
-    setForm({ name: '', email: '', message: '' });
-  };
-
   return (
     <div className="bg-dark min-h-screen text-off-white">
       {/* Header */}
@@ -75,50 +63,10 @@ export default function ContactClient() {
           </a>
         </div>
 
-        {/* Right — contact form */}
-        <div className="glass rounded-2xl p-8">
-          <h2 className="text-xl font-bold text-off-white mb-6">Send a Message</h2>
-          {sent ? (
-            <div className="flex flex-col items-center justify-center h-48 text-center">
-              <div className="w-14 h-14 bg-green-400/10 border border-green-400/20 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-              <p className="text-off-white font-bold mb-1">Message sent!</p>
-              <p className="text-muted text-sm">We&apos;ll get back to you shortly.</p>
-              <button onClick={() => setSent(false)} className="mt-4 text-gold text-sm hover:underline">Send another</button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Name</label>
-                <input type="text" required value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-                  placeholder="Your name" className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Email</label>
-                <input type="email" required value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
-                  placeholder="your@email.com" className="input-dark w-full px-4 py-3 rounded-xl text-sm"/>
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Message</label>
-                <textarea required rows={4} value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))}
-                  placeholder="How can we help you?" className="input-dark w-full px-4 py-3 rounded-xl text-sm resize-none"/>
-              </div>
-              <button type="submit" className="btn-gold py-3.5 rounded-xl font-bold shine mt-1">
-                Send Message →
-              </button>
-            </form>
-          )}
-        </div>
-      </section>
-
-      {/* Map */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-12">
-        <div className="rounded-2xl overflow-hidden border border-white/5 h-72">
+        {/* Right — map */}
+        <div className="rounded-2xl overflow-hidden border border-white/5 min-h-[320px]">
           <iframe title="TodoRental Location" width="100%" height="100%"
-            style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(0.85)' }}
+            style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(0.85)', minHeight: '320px' }}
             loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.0!2d19.8187!3d41.3275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE5JzM5LjAiTiAxOcKwNDknMDcuMiJF!5e0!3m2!1sen!2sal!4v1234567890"/>
         </div>
