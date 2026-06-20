@@ -18,7 +18,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), system-ui, sans-serif;
   background: var(--dark);
   color: var(--off-white);
   -webkit-font-smoothing: antialiased;

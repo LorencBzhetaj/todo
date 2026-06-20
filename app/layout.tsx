@@ -1,7 +1,15 @@
 import type { Metadata, Viewport } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import SessionProvider from './SessionProvider';
 import ErrorBoundary from '@/components/ErrorBoundary';
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-jakarta',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://todo-rental.al'),
@@ -33,9 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="sq" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           '@context': 'https://schema.org', '@type': 'CarRental', name: 'TodoRental',
           description: 'Kompania premium e makinave me qira në Tiranë, Shqipëri.',
@@ -45,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           priceRange: '€€', areaServed: 'Albania',
         }) }} />
       </head>
-      <body className="font-sans antialiased">
+      <body className={`${jakarta.variable} font-sans antialiased`}>
         <SessionProvider>
           <ErrorBoundary>
             <div suppressHydrationWarning>{children}</div>
