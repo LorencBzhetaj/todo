@@ -45,7 +45,7 @@ export default function AboutClient() {
         <h2 className="text-4xl font-black text-off-white mb-12">Our Location</h2>
         <div className="grid md:grid-cols-3 gap-6 mb-10">
           {[
-            { label: 'Address', val: 'Fresku, Tiranë, Albania', icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></> },
+            { label: 'Address', val: 'Zogu i Zi – Aeroporti Nënë Tereza', icon: <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></> },
             { label: 'Working Hours', val: 'Mon – Sat, 8:00 – 20:00', icon: <><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></> },
             { label: 'Phone', val: '+355 69 75 36 334', icon: <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 11.3 19.79 19.79 0 0 1 .07 2.7 2 2 0 0 1 2.06.5h3a2 2 0 0 1 2 1.72 19.79 19.79 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L6.09 8.37a16 16 0 0 0 6.29 6.29l1.24-1.22a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/> },
           ].map((item) => (
@@ -58,11 +58,18 @@ export default function AboutClient() {
             </div>
           ))}
         </div>
-        <div className="rounded-2xl overflow-hidden border border-white/5 h-80">
-          <iframe title="DriveElite Location" width="100%" height="100%" style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(0.9)' }}
-            loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.0!2d19.8187!3d41.3275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE5JzM5LjAiTiAxOcKwNDknMDcuMiJF!5e0!3m2!1sen!2sal!4v1234567890"/>
-        </div>
+        <a href="https://share.google/5IoOzklmyuVG5H1H5" target="_blank" rel="noopener noreferrer"
+          className="relative rounded-2xl overflow-hidden border border-white/5 h-80 block group hover:border-gold/40 transition-all">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/map.jpg" alt="TodoRental location" className="w-full h-full object-cover"/>
+          <div className="absolute bottom-0 left-0 right-0 bg-dark/80 backdrop-blur-sm px-5 py-3 flex items-center justify-between">
+            <div>
+              <p className="text-off-white font-bold text-sm">Zogu i Zi, Tiranë</p>
+              <p className="text-muted text-xs">Aeroporti Nënë Tereza</p>
+            </div>
+            <span className="text-gold text-xs font-semibold group-hover:underline">Open Maps →</span>
+          </div>
+        </a>
       </section>
     </div>
   );

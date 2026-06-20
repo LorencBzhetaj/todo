@@ -32,7 +32,7 @@ export default function ContactClient() {
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-gold/70 mb-1">Address</p>
               <p className="text-off-white font-semibold">Zogu i Zi, Tiranë</p>
-              <p className="text-muted text-sm">Rinas Airport</p>
+              <p className="text-muted text-sm">Aeroporti Nënë Tereza</p>
             </div>
           </div>
 
@@ -64,19 +64,14 @@ export default function ContactClient() {
         </div>
 
         {/* Right — static map image linking to Google Maps */}
-        <a href="https://maps.google.com/?q=Zogu+i+Zi+Tirane+Albania" target="_blank" rel="noopener noreferrer"
+        <a href="https://share.google/5IoOzklmyuVG5H1H5" target="_blank" rel="noopener noreferrer"
           className="relative rounded-2xl overflow-hidden border border-white/5 min-h-[320px] block group hover:border-gold/40 transition-all">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://staticmap.openstreetmap.de/staticmap.php?center=41.3275,19.8187&zoom=15&size=600x400&markers=41.3275,19.8187,red-pushpin"
-            alt="TodoRental location map"
-            className="w-full h-full object-cover min-h-[320px]"
-            style={{ filter: 'grayscale(0.3) contrast(0.9)' }}
-          />
+          <img src="/map.jpg" alt="TodoRental location map" className="w-full h-full object-cover min-h-[320px]"/>
           <div className="absolute bottom-0 left-0 right-0 bg-dark/80 backdrop-blur-sm px-5 py-3 flex items-center justify-between">
             <div>
-              <p className="text-off-white font-bold text-sm">Zogu i Zi, Tiranë</p>
-              <p className="text-muted text-xs">Rinas Airport</p>
+              <p className="text-off-white font-bold text-sm">Zogu i Zi</p>
+              <p className="text-muted text-xs">Aeroporti Nënë Tereza</p>
             </div>
             <span className="text-gold text-xs font-semibold group-hover:underline">Open Maps →</span>
           </div>
