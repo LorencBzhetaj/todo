@@ -174,7 +174,7 @@ export default function CarsClient() {
     const mType   = filterType === 'All' || [c.name, c.brandName, c.model, c.description].some(
       f => (f ?? '').toLowerCase().includes(filterType.toLowerCase())
     );
-    const mAvail  = !showOnlyAvailable || c.isAvailable;
+    const mAvail  = (pickupDate && dropoffDate) ? c.isAvailable : (!showOnlyAvailable || c.isAvailable);
     return mBrand && mPrice && mSearch && mType && mAvail;
   }), [cars, filterBrand, filterMaxPrice, debouncedSearch, filterType, showOnlyAvailable]);
 
